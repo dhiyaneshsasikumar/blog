@@ -1,0 +1,33 @@
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Blog {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(255)
+  description   String   @db.VarChar(255)
+  imageUrl      String?  @db.VarChar(255)
+  content       String?  @db.Text 
+  authorName    String   @db.VarChar(255)
+  authorId      String   @db.VarChar(255) 
+  likes         Int      @default(0)
+  likedBy       Likes[]
+}
+
+model Likes {
+  id          Int      @id @default(autoincrement())
+  blog        Blog     @relation(fields: [blogId], references: [id])
+  blogId      Int
+  userId      String   @db.VarChar(255)
+  
+  @@unique([blogId, userId])
+}
+
+
